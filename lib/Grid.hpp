@@ -1,4 +1,3 @@
-#include "Cell.hpp"
 #include <vector>
 #include "SFML/Graphics.hpp"
 #include <iostream>
