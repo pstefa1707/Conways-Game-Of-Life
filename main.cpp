@@ -32,7 +32,7 @@ int main()
             }
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) grid.populate();
-        window.clear();
+        window.clear(sf::Color::White);
 
         for (int x = 0; x < grid.width(); x++)
         {
@@ -41,7 +41,7 @@ int main()
                 if (grid.cells[y * grid.width() + x] == Grid::status::alive)
                 {
                     sf::RectangleShape rect;
-                    rect.setFillColor(sf::Color::White);
+                    rect.setFillColor(sf::Color::Black);
                     rect.setSize(grid.cell_size());
                     rect.setPosition(sf::Vector2f(grid.cell_size().x * x, grid.cell_size().y * y));
                     window.draw(rect);
