@@ -59,6 +59,7 @@ int Grid::_get_neighbours(int& x_pos, int& y_pos)
 void Grid::step()
 {
     this->_temp = this->cells;
+    #pragma omp parallel for
     for (int x = 0; x < this->_width; x++)
     {
         for (int y = 0; y < this->_height; y++)
