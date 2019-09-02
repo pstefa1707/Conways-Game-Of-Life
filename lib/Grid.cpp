@@ -1,7 +1,6 @@
 #include "Grid.hpp"
 #include "SFML/Graphics.hpp"
 
-class Cell;
 void Grid::populate()
 {
     for (int x = 0; x < this->_width; x++)
