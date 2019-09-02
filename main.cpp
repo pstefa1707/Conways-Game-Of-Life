@@ -2,7 +2,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "lib/Grid.hpp"
-#include <thread>
 
 
 class Grid;
