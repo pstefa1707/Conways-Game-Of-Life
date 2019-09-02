@@ -56,28 +56,42 @@ int Grid::_get_neighbours(int& x_pos, int& y_pos)
     return count;
 }
 
-void Grid::step()
+std::vector<sf::Vector2i> Grid::step()
 {
     this->_temp = this->cells;
-    #pragma omp parallel for
-    for (int x = 0; x < this->_width; x++)
+    std::vector<sf::Vector2i> changed;
+    #pragma omp parallel
     {
-        for (int y = 0; y < this->_height; y++)
+        std::vector<sf::Vector2i> _changed;
+        #pragma omp for nowait
+        for (int x = 0; x < this->_width; x++)
         {
-            unsigned int neighbours = this->_get_neighbours(x, y);
-            if (neighbours <= 1 && this->cells[y * this->_width + x] == status::alive)
+            for (int y = 0; y < this->_height; y++)
             {
-                this->_temp[y * this->_width + x] = status::dead;
-            }
-            else if (neighbours >= 4 && this->cells[y * this->_width + x] == status::alive)
-            {
-                this->_temp[y * this->_width + x] = status::dead;
-            }
-            else if (neighbours == 3 && this->cells[y * this->_width + x] == status::dead)
-            {
-                this->_temp[y * this->_width + x] = status::alive;
+                int index = y * this->_width + x;
+                unsigned int neighbours = this->_get_neighbours(x, y);
+                switch (this->cells[index])
+                {
+                    case status::alive:
+                        if (neighbours <= 1 || neighbours >= 4)
+                        {
+                            this->_temp[index] = status::dead;
+                            _changed.push_back(sf::Vector2i(x, y));
+                        }
+                        break;
+                    default:
+                        if (neighbours == 3) 
+                        {
+                            this->_temp[index] = status::alive;
+                            _changed.push_back(sf::Vector2i(x, y));
+                        }
+                        break;
+                }
             }
         }
+        #pragma omp critical
+        changed.insert(changed.end(), _changed.begin(), _changed.end());
     }
     this->cells = this->_temp;
+    return changed;
 }

@@ -11,7 +11,7 @@ class Grid
         sf::Vector2f _cell_size;
         int _get_neighbours(int& x_pos, int& y_pos);
     public:
-        void step();
+        std::vector<sf::Vector2i> step();
         int width();
         int height();
         sf::Vector2f cell_size();

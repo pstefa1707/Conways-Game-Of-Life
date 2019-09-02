@@ -9,10 +9,9 @@ int main()
 {
     float window_width = 800;
     float window_height = 800;
-    int grid_width = 200;
-    int grid_height = 200;
-	sf::Font arial;
-	arial.loadFromFile("./lib/arial.ttf");
+    int grid_width = 400;
+    int grid_height = 400;
+
     sf::RenderWindow window(sf::VideoMode(window_width, window_height), "Pstefa's Game of Life");
     //window.setFramerateLimit(144);
     Grid grid(grid_width, grid_height, window_width, window_height);
@@ -22,6 +21,8 @@ int main()
     sf::Clock CLOCK;
     CLOCK.restart();
 
+    window.clear(sf::Color::White);
+    
     while(true)
     {
         while(window.pollEvent(event))
@@ -32,30 +33,24 @@ int main()
                 return 0;
             }
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) grid.populate();
-        window.clear(sf::Color::White);
-        for (int x = 0; x < grid.width(); x++)
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
         {
-            for (int y = 0; y < grid.height(); y++)
-            {
-                if (grid.cells[y * grid.width() + x] == Grid::status::alive)
-                {
-                    sf::RectangleShape rect;
-                    rect.setFillColor(sf::Color::Black);
-                    rect.setSize(grid.cell_size());
-                    rect.setPosition(sf::Vector2f(grid.cell_size().x * x, grid.cell_size().y * y));
-                    window.draw(rect);
-                }
-            }
+            grid.populate();
+            window.clear(sf::Color::White);
         }
-        
-	    std::string fps = "FPS: " + std::to_string(1 / CLOCK.restart().asSeconds());
-	    sf::Text FPS(fps, arial, 30);
-        FPS.setFillColor(sf::Color::Black);
-        FPS.setPosition(sf::Vector2f(window_width - 200, window_height - 35));
-        window.draw(FPS);
 
-        grid.step();
+        for (sf::Vector2i index: grid.step())
+        {
+            sf::RectangleShape rect;
+            if (grid.cells[index.y * grid.width() + index.x] == Grid::status::alive) rect.setFillColor(sf::Color::Black);
+            else rect.setFillColor(sf::Color::White);
+            rect.setSize(grid.cell_size());
+            rect.setPosition(sf::Vector2f(grid.cell_size().x * index.x, grid.cell_size().y * index.y));
+            window.draw(rect);
+        }
+
+        std::cout << "Frame rate: " << std::to_string(1 / CLOCK.restart().asSeconds()) << std::endl;
+
         window.display();
     }
 }
