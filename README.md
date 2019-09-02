@@ -3,7 +3,7 @@ Conway's Game of Life, written in c++ SFML
 
 Makes use of OpenMp parallel processing of for loops.
 
-Can simulate 40k cells at ~ 300 generations per second, 1 million cells at ~ 10 generations per second. **i7 8700k**
+Can simulate 40k cells at ~ 300 generations per second, 1 million cells at ~ 15 generations per second. **i7 8700k**
 
 ## Dependancies
 
